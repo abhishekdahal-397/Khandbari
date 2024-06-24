@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require("../models/User");
 const bcrypt = require("bcrypt"); // For password hashing
 const jwt = require("jsonwebtoken"); // For JWT tokens
 
