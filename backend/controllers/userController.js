@@ -51,7 +51,13 @@ const loginUser = async (req, res) => {
 	const secret = process.env.JWT_SECRET; // Replace with your secret key
 	const token = await jwt.sign(payload, secret, { expiresIn: "1h" }); // Token expires in 1 hour
 
-	res.status(200).json({ token, message: "Login successful" });
+	res
+		.status(200)
+		.json({
+			token,
+			user: { username: user.username, email: user.email },
+			message: "Login successful",
+		});
 };
 
 module.exports = { registerUser, loginUser };

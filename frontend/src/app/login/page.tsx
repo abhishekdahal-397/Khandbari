@@ -1,69 +1,50 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/app/GlobalRedux/store";
+import { loginUser } from "@/app/GlobalRedux/features/user/userSlice";
 const LoginForm: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [errorMessage, setErrorMessage] = useState("");
+	const dispatch = useDispatch<AppDispatch>();
 	const router = useRouter();
+
+	// Get the user state from the store
+	const { error, status, isLoggedIn } = useSelector(
+		(state: RootState) => state.user
+	);
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-
-		try {
-			const response = await fetch("http://localhost:3003/api/users/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ email, password }),
-			});
-
-			const data = await response.json();
-			if (!response.ok) {
-				setErrorMessage(data.error || "An error occurred. Please try again.");
-				console.log(data.error || "error occurred");
-				const errorText = await response.text();
-				throw new Error(
-					`HTTP error! Status: ${response.status}, Text: ${errorText}`
-				);
-			}
-
-			// Clear form fields and error message
-			setEmail("");
-			setPassword("");
-			setErrorMessage("");
-
-			// Redirect to the desired page after successful login
-			router.push("/home");
-		} catch (error) {
-			console.log("Error :", error);
-
-			setErrorMessage("An error occurred. Please try again.");
-		}
+		await dispatch(loginUser({ email, password }));
 	};
+
+	// Redirect to home page on successful login
+	useEffect(() => {
+		if (isLoggedIn) {
+			router.push("/home");
+		}
+	}, [isLoggedIn, router]);
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-gray-100">
 			<div className="w-full max-w-md p-4 bg-white rounded-lg shadow-md">
 				<h1 className="text-2xl font-bold text-center mb-4">Login</h1>
 
-				{errorMessage && (
-					<div className="text-red-500 text-center mb-4">Error</div>
-				)}
+				{error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
 						<label
 							className="block text-gray-700 text-sm font-bold mb-2"
-							htmlFor="username"
+							htmlFor="email"
 						>
 							Email
 						</label>
 						<input
 							className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-							id="username"
+							id="email"
 							type="text"
 							placeholder="Enter username"
 							value={email}
