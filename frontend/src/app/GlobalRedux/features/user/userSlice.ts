@@ -41,7 +41,6 @@ export const loginUser = createAsyncThunk('user/loginUser', async ({ email, pass
         return rejectWithValue(error.message);
     }
 });
-
 const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -69,8 +68,11 @@ const userSlice = createSlice({
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload as string;
-            });
+            })
+            
+           ;
     },
+
 });
 
 export const { logout } = userSlice.actions;

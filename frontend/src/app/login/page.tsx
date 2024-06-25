@@ -23,7 +23,7 @@ const LoginForm: React.FC = () => {
 	// Redirect to home page on successful login
 	useEffect(() => {
 		if (isLoggedIn) {
-			router.push("/home");
+			router.push("/message");
 		}
 	}, [isLoggedIn, router]);
 

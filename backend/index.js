@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors"); // Added this line to import the cors middleware
 require("dotenv").config();
 const app = express();
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require("./routes/userRoutes");
 const PORT = process.env.PORT || 3001;
 mongoose
 	.connect(process.env.MONGODB_URI, {
@@ -24,7 +24,7 @@ app.use(cors({ origin: "*" })); // Allow all origins
 
 // Routes
 
-app.use('/api/users', userRoutes); 
+app.use("/api/users", userRoutes);
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
 });
