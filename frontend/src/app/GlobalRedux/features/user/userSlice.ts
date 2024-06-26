@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 interface UserState {
+    userId:String;
     username: string;
     email: string;
     isLoggedIn: boolean;
@@ -11,6 +12,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
+    userId:'',
     username: '',
     email: '',
     isLoggedIn: false,
@@ -46,6 +48,7 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
+            state.userId='';
             state.username = '';
             state.email = '';
             state.isLoggedIn = false;
@@ -57,7 +60,9 @@ const userSlice = createSlice({
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(loginUser.fulfilled, (state, action: PayloadAction<{ token: string; user: { username: string; email: string } }>) => {
+            .addCase(loginUser.fulfilled, (state, action: PayloadAction<{ token: string; user: {_id:string; username: string; email: string } }>) => 
+                {
+                    state.userId=action.payload.user._id;
                 state.username = action.payload.user.username;
                 state.email = action.payload.user.email;
                 state.isLoggedIn = true;

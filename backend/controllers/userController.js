@@ -57,6 +57,7 @@ const loginUser = async (req, res) => {
 		message: "Login successful",
 	});
 };
+
 const getAllUsers = async (req, res) => {
 	const users = await User.find();
 	if (!users) {
